@@ -30,13 +30,13 @@ Repo, brief, this plan, templates, `common.py`, fixtures.
 
 Verify: `cd ~/projects/project-kit && python3 -m pytest tests/test_common.py`
 
-## Task 03: Vault spec note [architect]
+## Task 03: Vault spec note [architect] ✅ 2026-11-17
 
 Write `Reference/Guides/Workflow/Project Workflow.md` (`type: howto`) from the plan's conventions and rubric.
 
 Verify: `python3 ~/Projects/automations/vault-lint/vault_lint.py "Workflow/Project Workflow.md"`
 
-## Task 04: `projects-status`
+## Task 04: `projects-status` ✅ 2026-11-17
 
 Files: `projectkit/status.py`, `bin/projects-status`, `tests/test_status.py`.
 
@@ -53,7 +53,7 @@ Tests (≥6): clean repo is strict-clean; a dirty file makes strict exit 1; a no
 
 Verify: `cd ~/projects/project-kit && python3 -m pytest tests/test_status.py && ./bin/projects-status --json | python3 -m json.tool >/dev/null`
 
-## Task 05: `project-check`
+## Task 05: `project-check` ✅ 2026-11-17
 
 Files: `projectkit/check.py`, `bin/project-check`, `tests/test_check.py`.
 
@@ -72,7 +72,7 @@ Tests (≥8): fixture `--all` passes (with both fixtures); each of invariants 1,
 
 Verify: `cd ~/projects/project-kit && python3 -m pytest tests/test_check.py`
 
-## Task 06: `new-project`
+## Task 06: `new-project` ✅ 2026-11-17
 
 Files: `projectkit/new.py`, `bin/new-project`, `tests/test_new.py`.
 
@@ -98,7 +98,7 @@ Tests (≥7): vault project creates 3 notes + index line; code project creates d
 
 Verify: `cd ~/projects/project-kit && python3 -m pytest tests/test_new.py`
 
-## Task 07: `link-projects`
+## Task 07: `link-projects` ✅ 2026-11-17
 
 Files: `projectkit/link.py`, `bin/link-projects`, `tests/test_link.py`.
 
@@ -117,7 +117,7 @@ Tests (≥9) against the `vault` fixture: Agent Brief gets the link and the path
 
 Verify: `cd ~/projects/project-kit && python3 -m pytest tests/test_link.py`
 
-## Task 08: Install on both machines [architect]
+## Task 08: Install on both machines [architect] ✅ 2026-11-17
 
 Symlink `bin/*` into `~/.local/bin` on mochtop; push the repo; clone on the Z4 and symlink there.
 
