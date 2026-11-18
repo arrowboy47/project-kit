@@ -48,6 +48,27 @@ def _check_code_dir(p: common.Project) -> list[str]:
     return problems
 
 
+def _check_workspace_dir(p: common.Project) -> list[str]:
+    """A workspace root is not a git repo; each child folder that is a repo needs a GitHub origin."""
+    if not p.slug:
+        return []
+    base = common.projects_root()
+    d = base / "_archive" / p.slug if p.state == "archived" else base / p.slug
+    if not d.is_dir():
+        return [f"workspace dir missing: {d}"]
+    problems: list[str] = []
+    for f in ("AGENTS.md", "CLAUDE.md"):
+        if not (d / f).is_file():
+            problems.append(f"missing {f} in {d}")
+    for child in sorted(d.iterdir()):
+        if child.name.startswith(".") or not (child / ".git").exists():
+            continue
+        url = _run_ok(["git", "remote", "get-url", "origin"], cwd=child)
+        if url is None or "github.com" not in url.stdout:
+            problems.append(f"child repo {child.name} has no GitHub origin")
+    return problems
+
+
 def check_project(p: common.Project, vault: Path, *, vault_only: bool = False,
                   remote_visibility: bool = False) -> list[str]:
     """Return problem strings for one project. Empty list means OK."""
@@ -55,6 +76,7 @@ def check_project(p: common.Project, vault: Path, *, vault_only: bool = False,
     name = p.name
     meta = p.meta
     is_code = p.kind == "code"
+    is_ws = p.kind == "workspace"
 
     # 1. frontmatter keys and legal values
     for key in common.REQUIRED_ALL:
@@ -92,6 +114,12 @@ def check_project(p: common.Project, vault: Path, *, vault_only: bool = False,
     if is_code and not vault_only:
         problems.extend(_check_code_dir(p))
 
+    if is_ws:
+        if "slug" not in meta:
+            problems.append("missing key: slug")
+        if not vault_only:
+            problems.extend(_check_workspace_dir(p))
+
     # 5. remote visibility matches the index (network, opt-in)
     if remote_visibility and is_code and p.repo:
         r = _run_ok(["gh", "repo", "view", p.repo, "--json", "visibility", "-q", ".visibility"])
@@ -121,7 +149,7 @@ def check_layout(projects: list[common.Project], root: Path) -> list[str]:
     """Every top-level entry of root must be a code slug, _archive, hidden, or a symlink."""
     if not root.is_dir():
         return []
-    slugs = {p.slug for p in projects if p.kind == "code" and p.slug}
+    slugs = {p.slug for p in projects if p.kind in ("code", "workspace") and p.slug}
     problems: list[str] = []
     for entry in sorted(root.iterdir()):
         if entry.name.startswith(".") or entry.name == "_archive" or entry.is_symlink():

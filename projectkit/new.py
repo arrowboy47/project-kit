@@ -54,7 +54,7 @@ def _has_commit(d: Path) -> bool:
 
 def _index_text(name: str, slug: str, repo: str, visibility: str, description: str,
                 kind: str, state: str) -> str:
-    tmpl = "index-code.md" if kind == "code" else "index-vault.md"
+    tmpl = {"code": "index-code.md", "workspace": "index-workspace.md"}.get(kind, "index-vault.md")
     text = c.render_template(tmpl, name=name, slug=slug, repo=repo,
                              visibility=visibility, description=description)
     return re.sub(r"(?m)^state: .*$", f"state: {state}", text, count=1)
@@ -125,6 +125,25 @@ def _code_steps(name: str, slug: str, folder: str, visibility: str, d: Path, *,
             if r.returncode != 0:
                 print(f"gh repo create failed: {r.stderr.strip()}", file=sys.stderr)
                 return 1
+    return 0
+
+
+def _workspace_steps(name: str, folder: str, d: Path, dry: bool) -> int:
+    """A workspace root is a plain folder: no git init, no GitHub repo."""
+    if d.exists():
+        print(f"skip dir {d} (exists)")
+    else:
+        print(f"create dir {d}")
+        if not dry:
+            d.mkdir(parents=True)
+    for fname in ("AGENTS.md", "CLAUDE.md"):
+        path = d / fname
+        if path.exists():
+            print(f"skip {path} (exists)")
+        else:
+            print(f"create {path}")
+            if not dry:
+                path.write_text(c.render_template(fname, name=name, folder=folder), encoding="utf-8")
     return 0
 
 
@@ -223,6 +242,20 @@ def main(argv: list[str] | None = None) -> int:
         try:
             rc = _code_steps(name, slug, folder, visibility, d, no_github=args.no_github, dry=dry)
         except (OSError, ValueError) as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 1
+        if rc:
+            return rc
+    elif args.kind == "workspace":
+        visibility = ""
+        repo = ""
+        d = c.projects_root() / slug
+        if d.exists() and not args.adopt:
+            print(f"{d} already exists, use --adopt", file=sys.stderr)
+            return 1
+        try:
+            rc = _workspace_steps(name, folder, d, dry)
+        except OSError as e:
             print(f"error: {e}", file=sys.stderr)
             return 1
         if rc:

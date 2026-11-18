@@ -41,9 +41,9 @@ def _is_repo(path: Path) -> bool:
     return top is not None and Path(top).resolve() == path.resolve()
 
 
-def describe(path: Path, fetch: bool = False) -> dict:
+def describe(path: Path, fetch: bool = False, slug: str | None = None) -> dict:
     row = dict.fromkeys(KEYS)
-    row["slug"] = path.name
+    row["slug"] = slug or path.name
     row["git"] = False
     if not _is_repo(path):
         return row
@@ -90,7 +90,12 @@ def scan(include_archived: bool = False, fetch: bool = False,
                 targets.extend(_visible_dirs(entry))
             continue
         targets.append(entry)
-    return [describe(t, fetch=fetch) for t in targets]
+    rows = [describe(t, fetch=fetch) for t in targets]
+    for t in targets:  # a workspace also reports each child repo as <workspace>/<child>
+        if is_workspace(t):
+            rows.extend(describe(ch, fetch=fetch, slug=f"{t.name}/{ch.name}")
+                        for ch in _visible_dirs(t) if (ch / ".git").exists())
+    return rows
 
 
 def compare(local: list[dict], remote: list[dict]) -> list[dict]:
@@ -114,8 +119,18 @@ def compare(local: list[dict], remote: list[dict]) -> list[dict]:
     return rows
 
 
+def is_workspace(path: Path) -> bool:
+    """A non-git folder whose subfolders include at least one git repo."""
+    if not path.is_dir() or (path / ".git").exists():
+        return False
+    return any((c / ".git").exists() for c in path.iterdir()
+               if c.is_dir() and not c.name.startswith("."))
+
+
 def local_problems(row: dict) -> list[str]:
     if not row["git"]:
+        if is_workspace(common.projects_root() / row["slug"]):
+            return []
         return ["not a git repo"]
     out = []
     if (row["dirty"] or 0) > 0:

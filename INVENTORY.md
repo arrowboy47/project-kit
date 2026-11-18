@@ -23,7 +23,7 @@ Rubric verdict is **Project** for all of these (rule 3, or the "code AK writes l
 | GPU Stack | `gpu-stack` | private | none | `git init` on the Z4, then clone to mochtop | Z4 only; contains `gpu_check.py` and Honcho MCP source used by services |
 | Game Streaming | `game-streaming` | private (decide at Gate 3) | none | `git init` on the Z4; `.gitignore` `emulators/` and `spike/` logs | Z4 only; AppImages are large binaries |
 | Actual Dashboard | `actual-dashboard` | private | none | `git init` on mochtop, then clone to the Z4; `.gitignore` `node_modules` | mochtop only; finance data rule applies (counts only) |
-| Local Websites | `Connies` | private | `arrowboy47/Connies` (private) | Flatten `businesses/Local_Websites/Connies` to `~/projects/Connies`; rename the Claude memory dir to its new path key | Project name stays "Local Websites"; client #2 gets its own repo later |
+| Local Websites | `Local_Websites` (`kind: workspace`) | per client repo (Connies is private) | root is **not** a repo; `Connies` has `arrowboy47/Connies` | Moved to `~/projects/Local_Websites/Connies`; Claude memory dir renamed | AK's decision 2026-11-17: root folder is not a repo, one nested repo per client |
 | Project Kit | `project-kit` | public (pending Gate 3) | **none yet** | Created and tested on both machines; GitHub repo creation was blocked by the permission classifier, so it waits for AK's OK | 58 tests pass on both machines |
 
 ## B. Vault-only projects (`kind: vault`)

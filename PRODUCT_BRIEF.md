@@ -37,7 +37,7 @@ type: project
 topic: project
 status: growing                 # note maturity: seedling | growing | evergreen
 state: active                   # active | paused | done | archived
-kind: code                      # code | vault
+kind: code                      # code | vault | workspace
 slug: campSearch                # code only: dir under ~/projects and repo name
 repo: arrowboy47/campSearch     # code only
 visibility: public              # code only: public | private
@@ -46,6 +46,8 @@ aliases: ["campsearch"]         # optional: extra spellings for link-projects
 description: "One plain sentence."
 tags: [project]
 ```
+
+`kind: workspace` is a plain (non-git) folder under `~/projects` whose subfolders are each their own repo, for example Local Websites with one repo per client. It carries `slug` but no `repo` or `visibility`, and each child repo must have a GitHub origin. `projects-status` lists children as `<slug>/<child>`.
 
 Companion notes in the same folder: `<Name> Backlog.md`, `<Name> Log.md`. Code projects also carry `AGENTS.md` and `CLAUDE.md` (containing `@AGENTS.md`) at the repo root.
 

@@ -34,7 +34,7 @@ def projects_index_path(vault: Path | None = None) -> Path:
 
 
 STATES = ("active", "paused", "done", "archived")
-KINDS = ("code", "vault")
+KINDS = ("code", "vault", "workspace")  # workspace: non-git root holding one repo per client/sub-project
 VISIBILITIES = ("public", "private")
 REQUIRED_ALL = ("type", "topic", "status", "state", "kind", "description", "tags")
 REQUIRED_CODE = ("slug", "repo", "visibility")
