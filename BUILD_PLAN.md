@@ -123,7 +123,7 @@ Symlink `bin/*` into `~/.local/bin` on mochtop; push the repo; clone on the Z4 a
 
 Verify: `command -v new-project project-check projects-status link-projects && ssh jadu 'bash -lc "command -v new-project project-check projects-status link-projects"'`
 
-## Task 09: INVENTORY.md [architect] (GATE 1 + GATE 2)
+## Task 09: INVENTORY.md [architect] (GATE 1 + GATE 2) ✅ approved 2026-11-17
 
 Every candidate with rubric verdict, name/slug, merge action, visibility, evidence. AK approves.
 
@@ -132,3 +132,11 @@ Done when: AK approves INVENTORY.md.
 ## Tasks 10 to 28
 
 As written in the approved plan (Phases 3 to 8). Each is expanded here with exact file lists once INVENTORY.md is approved, because the file lists depend on the approved project set.
+
+## Progress after T09 (2026-11-17)
+
+- T10 done: campSearch WIP committed to `phase2-retrieval` and pushed; sms baseline pushed; PDW, readsync, campSearch `main` pulled on the Z4. `projects-status --remote jadu` heads match.
+- T11 done: automations merged both ways (verified empty `rsync -rnc` diff); per-job application data already identical.
+- T12 done: mochtop moved to `~/projects`, `~/Projects` is a compat symlink, Claude memory dirs renamed. Venv rebuild deferred to the symlink-removal gap (Stack Backlog).
+- T13 done on both machines; `kind: workspace` added to the kit for Local_Websites (AK decision 2).
+- **Gate 3 pending:** gitleaks install (needs sudo), then per-repo visibility calls and remote creation.
