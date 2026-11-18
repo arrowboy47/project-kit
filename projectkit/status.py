@@ -131,7 +131,7 @@ def local_problems(row: dict) -> list[str]:
 
 def fetch_remote(host: str) -> list[dict]:
     cmd = ["ssh", "-o", "BatchMode=yes", host,
-           os.environ.get("PK_REMOTE_CMD", "projects-status --json")]
+           os.environ.get("PK_REMOTE_CMD", "~/.local/bin/projects-status --json")]
     try:
         r = run(cmd, timeout=60)
     except subprocess.TimeoutExpired:

@@ -131,7 +131,7 @@ def test_remote_uses_ssh_and_fails_strict_on_issue(projects, capsys, monkeypatch
     monkeypatch.setattr(status, "run", fake)
     rc, rows = _json(capsys, ["--remote", "jadu", "--strict"])
     assert len(calls) == 1
-    assert calls[0] == ["ssh", "-o", "BatchMode=yes", "jadu", "projects-status --json"]
+    assert calls[0] == ["ssh", "-o", "BatchMode=yes", "jadu", "~/.local/bin/projects-status --json"]
     assert rc == 1
     assert all(set(r) == {"slug", "here", "there", "issue"} for r in rows)
     assert _row(rows, "demo-app")["issue"] == "head-differs"
