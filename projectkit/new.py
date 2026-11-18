@@ -161,7 +161,18 @@ def _vault_steps(vault: Path, name: str, slug: str, folder: str, kind: str, repo
     index = proj_dir / f"{c.index_basename(name)}.md"
     label = _rel(index, vault)
     if index.exists():
-        print(f"skip {label} (exists)")
+        text = index.read_text(encoding="utf-8")
+        existing, body = c.parse_frontmatter(text)
+        tmeta, _ = c.parse_frontmatter(_index_text(name, slug, repo, visibility, description, kind, state))
+        missing_keys = [k for k in tmeta if k not in existing]
+        missing_links = [b for b in (c.backlog_basename(name), c.log_basename(name)) if f"[[{b}" not in body]
+        if missing_keys or missing_links:
+            print(f"update {label} (add: {', '.join(missing_keys + missing_links)})")
+            if not dry:
+                index.write_text(_merge_index(text, name, kind, slug, repo, visibility, description, state),
+                                 encoding="utf-8")
+        else:
+            print(f"skip {label} (exists, complete)")
     elif from_note:
         src = vault / from_note
         if not src.is_file():

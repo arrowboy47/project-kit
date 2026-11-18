@@ -153,3 +153,15 @@ def test_default_slug_from_name(vault, projects, calls, capsys):
     assert rc == 0
     assert f"create GitHub repo {c.gh_owner()}/garden-plan-v2 (public)" in capsys.readouterr().out
     assert new.default_slug("  Garden  Plan!! v2 ") == "garden-plan-v2"
+
+
+def test_adopt_completes_a_partial_existing_index(vault, projects):
+    idx = vault / "Projects/Demo App/_Demo App Index.md"
+    idx.write_text("---\ntype: project\ntopic: project\nstatus: growing\ntags:\n  - project\n---\n# Demo App\n\nBody stays.\n")
+    rc = new.main(["Demo App", "--kind", "code", "--public", "--slug", "demo-app", "--adopt",
+                   "--no-github", "--description", "A demo."])
+    assert rc == 0
+    meta, body = c.parse_frontmatter(idx.read_text())
+    assert meta["kind"] == "code" and meta["state"] == "active" and meta["slug"] == "demo-app"
+    assert meta["tags"] == ["project"] and "Body stays." in body
+    assert "[[Demo App Backlog" in body and "[[Demo App Log" in body
