@@ -139,4 +139,5 @@ As written in the approved plan (Phases 3 to 8). Each is expanded here with exac
 - T11 done: automations merged both ways (verified empty `rsync -rnc` diff); per-job application data already identical.
 - T12 done: mochtop moved to `~/projects`, `~/Projects` is a compat symlink, Claude memory dirs renamed. Venv rebuild deferred to the symlink-removal gap (Stack Backlog).
 - T13 done on both machines; `kind: workspace` added to the kit for Local_Websites (AK decision 2).
-- **Gate 3 pending:** gitleaks install (needs sudo), then per-repo visibility calls and remote creation.
+- T14 + T15 done (Gate 3): gitleaks scan, visibility calls, 7 private remotes created, every project cloned or adopted on both machines. Open: OpenWeather key rotation (Stack Backlog).
+- Next: Phase 4 (vault scaffolding, T16 to T18).
