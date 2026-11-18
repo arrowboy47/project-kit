@@ -141,3 +141,6 @@ As written in the approved plan (Phases 3 to 8). Each is expanded here with exac
 - T13 done on both machines; `kind: workspace` added to the kit for Local_Websites (AK decision 2).
 - T14 + T15 done (Gate 3): gitleaks scan, visibility calls, 7 private remotes created, every project cloned or adopted on both machines. Open: OpenWeather key rotation (Stack Backlog).
 - Next: Phase 4 (vault scaffolding, T16 to T18).
+- T16 to T18 done (Phase 4): CampSearch Roadmap and Log renamed to project-specific names (links fixed, one-time waiver); 25 projects scaffolded with `new-project --adopt` (14 code, 1 workspace, 10 vault-only); 17 notes or folders moved; Projects Index regenerated. `project-check --all --layout --remote-visibility` is clean.
+- T21 done: AGENTS.md and CLAUDE.md committed and pushed in every repo except mywebsite (its push deploys the live site and is left for AK); pulled on the Z4.
+- T19+ (Phase 5) in progress: Haiku contractors populate each project's index, backlog and log from repos, Guides notes and the Stack Log, using the rules in the scratchpad `populate_instructions.md`.
